@@ -203,7 +203,7 @@ class EmployeeImport(View):
                 for key, value in row.to_dict().items()
                 if key in field_mapping
             }
-
+            mapped_row = reverse_map_fields(mapped_row)
             employee, created = Employee.objects.get_or_create(
                 employee_id=mapped_row["employee_id"],
                 defaults={
