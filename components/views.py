@@ -556,20 +556,20 @@ class SummaryDelete(View):
             return JsonResponse({"message": str(e)}, status=500)
 
 
-# 用户信息查询接口（获取所有用户信息，转为字典，添加到user_list中，返回user_list）
+# 用户信息查询接口（根据id获取用户信息，转为字典，添加到user_list中，返回user_list）
 class UserSearch(View):
     def get(self, request):
         id = request.GET.get("id")
-        users = User.objects.fiter(id=id)
-        user_list = []
-        for user in users:
+        try:
+            user = User.objects.get(id=id)
             user_dict = model_to_dict(user)
             if user.avatar:
                 user_dict["avatar"] = request.build_absolute_uri(user.avatar.url)
             else:
                 user_dict["avatar"] = ""
-            user_list.append(user_dict)
-        return JsonResponse(user_list, safe=False)
+            return JsonResponse(user_dict, safe=False)
+        except User.DoesNotExist:
+            return JsonResponse({"error": "用户不存在"}, status=404)
 
 
 # 用户信息更新接口（获取前端传来的json数据，根据用户id更新用户信息，返回更新成功的信息；如果用户不存在，则提醒；如果出现其他错误，返回错误信息）
