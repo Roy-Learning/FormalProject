@@ -29,6 +29,7 @@ from components.views import (
     WareHousingAdd,
     OutAdd,
     TodoSearch,
+    TodoUpdate,
     SummarySearch,
     SummaryUpdate,
     SummaryDelete,
@@ -53,6 +54,7 @@ urlpatterns = [
     path("out_add/", OutAdd.as_view()),  # 成品出库检测添加,POST
     # 待办事项接口
     path("todo_search/", TodoSearch.as_view()),  # 待办事项查询,GET
+    path("todo_update/", TodoUpdate.as_view()),  # 待办事项更新,POST
     # 事项汇总接口
     path("summary_search/", SummarySearch.as_view()),  # 事项汇总查询,GET
     path("summary_update/", SummaryUpdate.as_view()),  # 事项汇总更新,POST

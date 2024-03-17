@@ -60,11 +60,11 @@ class Matirial(models.Model):
     id = models.AutoField(primary_key=True)
     matirial_id = models.CharField(max_length=20, unique=True)
     purchase_date = models.DateField()
-    matirail_Qualify = models.BooleanField()
+    matirail_Qualify = models.BooleanField(default=False)
     matriaial_QAid = models.CharField(max_length=20)
     message = models.CharField(max_length=100)
     department = models.CharField(max_length=20)
-    read = models.BooleanField()
+    read = models.BooleanField(default=False)
 
 
 class WareHousing(models.Model):
@@ -76,7 +76,7 @@ class WareHousing(models.Model):
     warehousing_QAid = models.CharField(max_length=20)
     message = models.CharField(max_length=100)
     department = models.CharField(max_length=20)
-    read = models.BooleanField()
+    read = models.BooleanField(default=False)
 
 
 class Out(models.Model):
@@ -87,7 +87,7 @@ class Out(models.Model):
     out_QAid = models.CharField(max_length=20)
     message = models.CharField(max_length=100)
     department = models.CharField(max_length=20)
-    read = models.BooleanField()
+    read = models.BooleanField(default=False)
 
 
 class Summary(models.Model):

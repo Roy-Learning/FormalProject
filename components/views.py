@@ -195,6 +195,7 @@ class MatirialAdd(View):
         matriaial_QAid = data.get("matriaial_QAid")
         message = data.get("message")
         department = data.get("department")
+        read = "False"
         try:
             matirial = Matirial(
                 id=id,
@@ -204,6 +205,7 @@ class MatirialAdd(View):
                 matriaial_QAid=matriaial_QAid,
                 message=message,
                 department=department,
+                read=read,
             )
             matirial.save()
             return JsonResponse({"message": "原料信息添加成功"})
@@ -226,6 +228,7 @@ class WareHousingAdd(View):
         warehousing_QAid = data.get("warehousing_QAid")
         message = data.get("message")
         department = data.get("department")
+        read = "False"
         # 添加成品入库信息
         try:
             warehousing = WareHousing(
@@ -237,6 +240,7 @@ class WareHousingAdd(View):
                 warehousing_QAid=warehousing_QAid,
                 message=message,
                 department=department,
+                read=read,
             )
             warehousing.save()
             return JsonResponse({"message": "成品入库信息添加成功"})
@@ -257,6 +261,7 @@ class OutAdd(View):
         out_QAid = data.get("out_QAid")
         message = data.get("message")
         department = data.get("department")
+        read = "False"
         # 添加成品出库信息
         try:
             out = Out(
@@ -266,6 +271,7 @@ class OutAdd(View):
                 out_QAid=out_QAid,
                 message=message,
                 department=department,
+                read=read,
             )
             out.save()
             return JsonResponse({"message": "成品出库信息添加成功"})
@@ -276,28 +282,113 @@ class OutAdd(View):
 # 待办事项查询接口 (获取所有待办事项信息，转为字典，添加到todo_list中，返回todo_list)
 class TodoSearch(View):
     def get(self, request):
+        # 部门为SRC的待办事项
+        SRC_todo = []
+        SRC_todo_matirial = Matirial.objects.filter(department="SRC")
+        # 将SRC_todo_matirial中的数据转为字典，添加到SRC_todo中
+        for matirial in SRC_todo_matirial:
+            matirial_dict = model_to_dict(matirial)
+            SRC_todo.append(matirial_dict)
+
+        # 部门为PRD的待办事项
+        PRD_todo = []
+        PRD_todo_temp = []
+        PRD_todo_matirial = Matirial.objects.filter(department="PRD")
+        PRD_todo_warehousing = WareHousing.objects.filter(department="PRD")
+        # 将PRD_todo_matirial和PRD_todo_warehousing中的数据转为字典，根据来源不同添加到PRD_todo中
+        for matirial in PRD_todo_matirial:
+            matirial_dict = model_to_dict(matirial)
+            PRD_todo_temp.append(matirial_dict)
+        PRD_todo.append(PRD_todo_temp)
+        PRD_todo_temp = []
+        for matirial in PRD_todo_warehousing:
+            matirial_dict = model_to_dict(matirial)
+            PRD_todo_temp.append(matirial_dict)
+        PRD_todo.append(PRD_todo_temp)
+
+        # 部门为MTD的待办事项
+        MTD_todo = []
+        MTD_todo_temp = []
+        MTD_todo_warehousing = WareHousing.objects.filter(department="MTD")
+        MTD_todo_out = Out.objects.filter(department="MTD")
+        # 将MTD_todo_warehousing和MTD_todo_out中的数据转为字典，根据来源不同添加到MTD_todo中
+        for matirial in MTD_todo_warehousing:
+            matirial_dict = model_to_dict(matirial)
+            MTD_todo_temp.append(matirial_dict)
+        MTD_todo.append(MTD_todo_temp)
+        MTD_todo_temp = []
+        for matirial in MTD_todo_out:
+            matirial_dict = model_to_dict(matirial)
+            MTD_todo_temp.append(matirial_dict)
+        MTD_todo.append(MTD_todo_temp)
+
+        # 部门为SALE的待办事项
+        SALE_todo = []
+        SALE_todo_temp = []
+        SALE_todo_warehousing = WareHousing.objects.filter(department="SALE")
+        SALE_todo_out = Out.objects.filter(department="SALE")
+        # 将SALE_todo_warehousing和SALE_todo_out中的数据转为字典，根据来源不同添加到SALE_todo中
+        for matirial in SALE_todo_warehousing:
+            matirial_dict = model_to_dict(matirial)
+            SALE_todo_temp.append(matirial_dict)
+        SALE_todo.append(SALE_todo_temp)
+        SALE_todo_temp = []
+        for matirial in SALE_todo_out:
+            matirial_dict = model_to_dict(matirial)
+            SALE_todo_temp.append(matirial_dict)
+        SALE_todo.append(SALE_todo_temp)
+
+        return JsonResponse(
+            {"SRC": SRC_todo, "PRD": PRD_todo, "MTD": MTD_todo, "SALE": SALE_todo},
+            safe=False,
+        )
+
+
+# 更新待办事项接口（获取前端传来的json数据，根据部门更新对应的read状态，返回更新成功的信息；如果出现其他错误，返回错误信息）
+class TodoUpdate(View):
+    def post(self, request):
         data = json.loads(request.body)
         if isinstance(data, list):
-            data = data[0]  # 如果data是一个列表，取第一个元素
-        # 根据部门查询待办事项
-        todo_matirial = Matirial.objects.filter(deparments=data.get("department"))
-        todo_warehousing = WareHousing.objects.filter(deparments=data.get("department"))
-        todo_out = Out.objects.filter(deparments=data.get("department"))
-        todo_matirial_list = []
-        todo_warehousing_list = []
-        todo_out_list = []
-        for todo in todo_matirial:
-            todo_matirial_dict = model_to_dict(todo)
-            todo_matirial_list.append(todo_matirial_dict)
-        for todo in todo_warehousing:
-            todo_warehousing_dict = model_to_dict(todo)
-            todo_warehousing_list.append(todo_warehousing_dict)
-        for todo in todo_out:
-            todo_out_dict = model_to_dict(todo)
-            todo_out_list.append(todo_out_dict)
-        return JsonResponse(
-            todo_matirial_list, todo_warehousing_list, todo_out_list, safe=False
-        )
+            data = data[0]
+        department = data.get("department")
+        try:
+            # 根据部门更新对应的read状态
+            # 将所有待办事项的read状态更新为True
+            if department == "SRC":
+                matirials = Matirial.objects.filter(department="SRC")
+                for matirial in matirials:
+                    matirial.read = True
+                    matirial.save()
+            elif department == "PRD":
+                matirials = Matirial.objects.filter(department="PRD")
+                for matirial in matirials:
+                    matirial.read = True
+                    matirial.save()
+                wareHousings = WareHousing.objects.filter(department="PRD")
+                for warehousing in wareHousings:
+                    warehousing.read = True
+                    warehousing.save()
+            elif department == "MTD":
+                warehousings = WareHousing.objects.filter(department="MTD")
+                for warehousing in warehousings:
+                    warehousing.read = True
+                    warehousing.save()
+                outs = Out.objects.filter(department="MTD")
+                for out in outs:
+                    out.read = True
+                    out.save()
+            elif department == "SALE":
+                warehousings = WareHousing.objects.filter(department="SALE")
+                for warehousing in warehousings:
+                    warehousing.read = True
+                    warehousing.save()
+                outs = Out.objects.filter(department="SALE")
+                for out in outs:
+                    out.read = True
+                    out.save()
+            return JsonResponse({"message": "success"})
+        except Exception as e:
+            return JsonResponse({"message": str(e)}, status=500)
 
 
 # 事务汇总查询接口（获取所有事务汇总信息，转为字典，添加到summary_list中，返回summary_list）
