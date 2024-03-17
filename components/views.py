@@ -1,4 +1,5 @@
 import json
+from django.db import IntegrityError
 from django.forms import model_to_dict
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -253,7 +254,11 @@ class MatirialAdd(View):
                 read=read,
             )
             matirial.save()
-            return JsonResponse({"message": "原料信息添加成功"})
+            return JsonResponse({"message": "原料信息添加成功", "success": True})
+        except IntegrityError as e:
+            return JsonResponse(
+                {"message": "原料ID信息已存在", "success": False}, status=500
+            )
         except Exception as e:
             return JsonResponse({"message": str(e)}, status=500)
 
@@ -288,7 +293,11 @@ class WareHousingAdd(View):
                 read=read,
             )
             warehousing.save()
-            return JsonResponse({"message": "成品入库信息添加成功"})
+            return JsonResponse({"message": "成品入库信息添加成功", "success": True})
+        except IntegrityError as e:
+            return JsonResponse(
+                {"message": "成品入库ID信息已存在", "success": False}, status=500
+            )
         except Exception as e:
             return JsonResponse({"message": str(e)}, status=500)
 
@@ -319,7 +328,11 @@ class OutAdd(View):
                 read=read,
             )
             out.save()
-            return JsonResponse({"message": "成品出库信息添加成功"})
+            return JsonResponse({"message": "成品出库信息添加成功", "success": True})
+        except IntegrityError as e:
+            return JsonResponse(
+                {"message": "成品出库ID信息已存在", "success": False}, status=500
+            )
         except Exception as e:
             return JsonResponse({"message": str(e)}, status=500)
 
