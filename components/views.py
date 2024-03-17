@@ -24,10 +24,11 @@ from components.models import (
 # 登入接口 (获取前端传来的用户名和密码，与数据库用户名相同的进行密码校验，匹配则返回success和id，否则返回error和message)
 class UserLogin(View):
     def get(self, request):
-        data = json.loads(request.body)
+        username = request.GET.get("username")
+        password = request.GET.get("password")
         try:
-            user = User.objects.get(username=data.get("username"))
-            if user.password == data.get("password"):
+            user = User.objects.get(username=username)
+            if user.password == password:
                 return JsonResponse({"message": "success", "id": user.id})
             else:
                 return JsonResponse({"message": "error", "message": "密码错误"})
