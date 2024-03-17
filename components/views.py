@@ -141,25 +141,22 @@ class EmployeeUpdate(View):
         # 如果出现其他错误，返回错误信息
         try:
             employee = Employee.objects.get(id=id)
-            print(mapped_fields.employee_id)
-            employee = Employee(
-                employee_id=mapped_fields.employee_id,
-                name=mapped_fields.name,
-                age=mapped_fields.age,
-                gender=mapped_fields.gender,
-                department=mapped_fields.department,
-                position=mapped_fields.position,
-            )
+            employee.employee_id = mapped_fields["employee_id"]
+            employee.name = mapped_fields["name"]
+            employee.age = mapped_fields["age"]
+            employee.gender = mapped_fields["gender"]
+            employee.department = mapped_fields["department"]
+            employee.position = mapped_fields["position"]
             employee.save()
             return JsonResponse({"message": "员工信息更新成功"})
         except Employee.DoesNotExist:
             employee = Employee(
-                employee_id=mapped_fields.employee_id,
-                name=mapped_fields.name,
-                age=mapped_fields.age,
-                gender=mapped_fields.gender,
-                department=mapped_fields.department,
-                position=mapped_fields.position,
+                employee_id=mapped_fields["employee_id"],
+                name=mapped_fields["name"],
+                age=mapped_fields["age"],
+                gender=mapped_fields["gender"],
+                department=mapped_fields["department"],
+                position=mapped_fields["position"],
             )
             employee.save()
             return JsonResponse({"message": "员工信息添加成功"})
