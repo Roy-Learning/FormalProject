@@ -129,7 +129,10 @@ class EmployeeSearch(View):
 class EmployeeUpdate(View):
     def post(self, request):
         # 获取前端传来的json数据
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "数据错误"}, status=400)
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         # 获取员工信息
@@ -168,7 +171,10 @@ class EmployeeUpdate(View):
 # 员工信息删除接口 (获取前端传来的json数据，根据员工id删除员工信息，返回删除成功的信息；如果员工不存在，返回员工信息不存在；如果出现其他错误，返回错误信息)
 class EmployeeDelete(View):
     def post(self, request):
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "数据错误"}, status=400)
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         id = data.get("id")
@@ -230,7 +236,10 @@ class EmployeeImport(View):
 # 原料检测添加接口 (获取前端传来的json数据，添加原料信息；如果出现其他错误，返回错误信息)
 class MatirialAdd(View):
     def post(self, request):
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "数据错误"}, status=400)
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         # 获取原料信息
@@ -266,7 +275,10 @@ class MatirialAdd(View):
 # 成品入库检测添加接口 (获取前端传来的json数据，添加成品入库信息；如果出现其他错误，返回错误信息)
 class WareHousingAdd(View):
     def post(self, request):
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "数据错误"}, status=400)
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         # 获取成品入库信息
@@ -305,7 +317,10 @@ class WareHousingAdd(View):
 # 成品出库检测添加接口 (获取前端传来的json数据，添加成品出库信息；如果出现其他错误，返回错误信息)
 class OutAdd(View):
     def post(self, request):
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "数据错误"}, status=400)
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         # 获取成品出库信息
@@ -405,7 +420,10 @@ class TodoSearch(View):
 # 更新待办事项接口（获取前端传来的json数据，根据部门更新对应的read状态，返回更新成功的信息；如果出现其他错误，返回错误信息）
 class TodoUpdate(View):
     def post(self, request):
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "数据错误"}, status=400)
         if isinstance(data, list):
             data = data[0]
         department = data.get("department")
@@ -463,7 +481,10 @@ class SummarySearch(View):
 # 事务汇总更新接口（获取前端传来的json数据，根据事务id更新事务信息，返回更新成功的信息；如果事务不存在，则添加事务信息；如果出现其他错误，返回错误信息）
 class SummaryUpdate(View):
     def post(self, request):
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "数据错误"}, status=400)
         if isinstance(data, list):
             data = data[0]
         id = data.get("id")
@@ -488,7 +509,10 @@ class SummaryUpdate(View):
 # 事务汇总删除接口（获取前端传来的json数据，根据事务id删除事务信息，返回删除成功的信息；如果事务不存在，返回事务信息不存在；如果出现其他错误，返回错误信息）
 class SummaryDelete(View):
     def post(self, request):
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "数据错误"}, status=400)
         if isinstance(data, list):
             data = data[0]
         id = data.get("id")
@@ -520,7 +544,10 @@ class UserSearch(View):
 # 用户信息更新接口（获取前端传来的json数据，根据用户id更新用户信息，返回更新成功的信息；如果用户不存在，则提醒；如果出现其他错误，返回错误信息）
 class UserUpdate(View):
     def post(self, request):
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "数据错误"}, status=400)
         if isinstance(data, list):
             data = data[0]
         id = data.get("id")
