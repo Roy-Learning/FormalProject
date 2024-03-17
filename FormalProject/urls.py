@@ -40,28 +40,28 @@ from components.views import (
 urlpatterns = [
     # path("admin/", admin.site.urls),
     # 登入接口
-    path("userinfo/", UserLogin.as_view()),  # 用户登入检查,GET
+    path("api/userinfo/", UserLogin.as_view()),  # 用户登入检查,GET
     # 员工信息接口
-    path("employee_search/", EmployeeSearch.as_view()),  # 员工信息查询,GET
-    path("employee_update/", EmployeeUpdate.as_view()),  # 员工信息更新,POST
-    path("employee_delete/", EmployeeDelete.as_view()),  # 员工信息删除,POST
-    path("employee_import/", EmployeeImport.as_view()),  # 员工信息导入,POST
+    path("api/employee_search/", EmployeeSearch.as_view()),  # 员工信息查询,GET
+    path("api/employee_update/", EmployeeUpdate.as_view()),  # 员工信息更新,POST
+    path("api/employee_delete/", EmployeeDelete.as_view()),  # 员工信息删除,POST
+    path("api/employee_import/", EmployeeImport.as_view()),  # 员工信息导入,POST
     # 原料检测接口
-    path("matirial_add/", MatirialAdd.as_view()),  # 原料检测添加,POST
+    path("api/matirial_add/", MatirialAdd.as_view()),  # 原料检测添加,POST
     # 成品入库检测接口
-    path("warehousing_add/", WareHousingAdd.as_view()),  # 成品入库检测添加,POST
+    path("api/warehousing_add/", WareHousingAdd.as_view()),  # 成品入库检测添加,POST
     # 成品出库检测接口
-    path("out_add/", OutAdd.as_view()),  # 成品出库检测添加,POST
+    path("api/out_add/", OutAdd.as_view()),  # 成品出库检测添加,POST
     # 待办事项接口
-    path("todo_search/", TodoSearch.as_view()),  # 待办事项查询,GET
-    path("todo_update/", TodoUpdate.as_view()),  # 待办事项更新,POST
+    path("api/todo_search/", TodoSearch.as_view()),  # 待办事项查询,GET
+    path("api/todo_update/", TodoUpdate.as_view()),  # 待办事项更新,POST
     # 事项汇总接口
-    path("summary_search/", SummarySearch.as_view()),  # 事项汇总查询,GET
-    path("summary_update/", SummaryUpdate.as_view()),  # 事项汇总更新,POST
-    path("summary_delete/", SummaryDelete.as_view()),  # 事项汇总删除,POST
+    path("api/summary_search/", SummarySearch.as_view()),  # 事项汇总查询,GET
+    path("api/summary_update/", SummaryUpdate.as_view()),  # 事项汇总更新,POST
+    path("api/summary_delete/", SummaryDelete.as_view()),  # 事项汇总删除,POST
     # 个人信息接口
-    path("userinfo_search/", UserSearch.as_view()),  # 用户信息查询,GET
-    path("userinfo_update/", UserUpdate.as_view()),  # 用户信息更新,POST
+    path("api/userinfo_search/", UserSearch.as_view()),  # 用户信息查询,GET
+    path("api/userinfo_update/", UserUpdate.as_view()),  # 用户信息更新,POST
 ]
 
 if settings.DEBUG:
