@@ -327,6 +327,7 @@ class OutAdd(View):
         id = data.get("id")
         out_id = data.get("out_id")
         out_date = data.get("out_date")
+        out_qualify = data.get("out_qualify")
         out_QAid = data.get("out_QAid")
         message = data.get("message")
         department = data.get("department")
@@ -337,6 +338,7 @@ class OutAdd(View):
                 id=id,
                 out_id=out_id,
                 out_date=out_date,
+                out_qualify=out_qualify,
                 out_QAid=out_QAid,
                 message=message,
                 department=department,
