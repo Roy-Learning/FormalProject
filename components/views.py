@@ -559,7 +559,8 @@ class SummaryDelete(View):
 # 用户信息查询接口（获取所有用户信息，转为字典，添加到user_list中，返回user_list）
 class UserSearch(View):
     def get(self, request):
-        users = User.objects.all()
+        id = request.GET.get("id")
+        users = User.objects.fiter(id=id)
         user_list = []
         for user in users:
             user_dict = model_to_dict(user)
