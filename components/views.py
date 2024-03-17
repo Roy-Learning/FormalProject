@@ -243,23 +243,19 @@ class MatirialAdd(View):
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         # 获取原料信息
+        mapped_fields = reverse_map_fields(data)
+
         id = data.get("id")
-        matirial_id = data.get("matirial_id")
-        purchase_date = data.get("purchase_date")
-        matirail_Qualify = data.get("matirail_Qualify")
-        matriaial_QAid = data.get("matriaial_QAid")
-        message = data.get("message")
-        department = data.get("department")
         read = "False"
         try:
             matirial = Matirial(
                 id=id,
-                matirial_id=matirial_id,
-                purchase_date=purchase_date,
-                matirail_Qualify=matirail_Qualify,
-                matriaial_QAid=matriaial_QAid,
-                message=message,
-                department=department,
+                matirial_id=mapped_fields["matirial_id"],
+                purchase_date=mapped_fields["purchase_date"],
+                matirail_Qualify=mapped_fields["matirail_Qualify"],
+                matriaial_QAid=mapped_fields["matriaial_QAid"],
+                message=mapped_fields["message"],
+                department=mapped_fields["department"],
                 read=read,
             )
             matirial.save()
@@ -282,26 +278,21 @@ class WareHousingAdd(View):
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         # 获取成品入库信息
+        mapped_fields = reverse_map_fields(data)
+
         id = data.get("id")
-        warhousing_id = data.get("warhousing_id")
-        produce_date = data.get("produce_date")
-        finish_date = data.get("finish_date")
-        qualify = data.get("qualify")
-        warehousing_QAid = data.get("warehousing_QAid")
-        message = data.get("message")
-        department = data.get("department")
         read = "False"
         # 添加成品入库信息
         try:
             warehousing = WareHousing(
                 id=id,
-                warhousing_id=warhousing_id,
-                produce_date=produce_date,
-                finish_date=finish_date,
-                qualify=qualify,
-                warehousing_QAid=warehousing_QAid,
-                message=message,
-                department=department,
+                warhousing_id=mapped_fields["warhousing_id"],
+                produce_date=mapped_fields["produce_date"],
+                finish_date=mapped_fields["finish_date"],
+                qualify=mapped_fields["qualify"],
+                warehousing_QAid=mapped_fields["warehousing_QAid"],
+                message=mapped_fields["message"],
+                department=mapped_fields["department"],
                 read=read,
             )
             warehousing.save()
@@ -324,24 +315,20 @@ class OutAdd(View):
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         # 获取成品出库信息
+        mapped_fields = reverse_map_fields(data)
+
         id = data.get("id")
-        out_id = data.get("out_id")
-        out_date = data.get("out_date")
-        out_qualify = data.get("out_qualify")
-        out_QAid = data.get("out_QAid")
-        message = data.get("message")
-        department = data.get("department")
         read = "False"
         # 添加成品出库信息
         try:
             out = Out(
                 id=id,
-                out_id=out_id,
-                out_date=out_date,
-                out_qualify=out_qualify,
-                out_QAid=out_QAid,
-                message=message,
-                department=department,
+                out_id=mapped_fields["out_id"],
+                out_date=mapped_fields["out_date"],
+                out_qualify=mapped_fields["out_qualify"],
+                out_QAid=mapped_fields["out_QAid"],
+                message=mapped_fields["message"],
+                department=mapped_fields["department"],
                 read=read,
             )
             out.save()
@@ -413,8 +400,36 @@ class TodoSearch(View):
             SALE_todo_temp.append(matirial_dict)
         SALE_todo.append(SALE_todo_temp)
 
+        # 部门为QA的待办事项
+        QA_todo = []
+        QA_todo_temp = []
+        QA_todo_matirial = Matirial.objects.filter(department="QA")
+        QA_todo_warehousing = WareHousing.objects.filter(department="QA")
+        QA_todo_out = Out.objects.filter(department="QA")
+        # 将QA_todo_matirial和QA_todo_warehousing和QA_todo_out中的数据转为字典，根据来源不同添加到QA_todo中
+        for matirial in QA_todo_matirial:
+            matirial_dict = model_to_dict(matirial)
+            QA_todo_temp.append(matirial_dict)
+        QA_todo.append(QA_todo_temp)
+        QA_todo_temp = []
+        for matirial in QA_todo_warehousing:
+            matirial_dict = model_to_dict(matirial)
+            QA_todo_temp.append(matirial_dict)
+        QA_todo.append(QA_todo_temp)
+        QA_todo_temp = []
+        for matirial in QA_todo_out:
+            matirial_dict = model_to_dict(matirial)
+            QA_todo_temp.append(matirial_dict)
+        QA_todo.append(QA_todo_temp)
+
         return JsonResponse(
-            {"SRC": SRC_todo, "PRD": PRD_todo, "MTD": MTD_todo, "SALE": SALE_todo},
+            {
+                "SRC": SRC_todo,
+                "PRD": PRD_todo,
+                "MTD": MTD_todo,
+                "SALE": SALE_todo,
+                "QA": QA_todo,
+            },
             safe=False,
         )
 
@@ -461,6 +476,19 @@ class TodoUpdate(View):
                     warehousing.read = True
                     warehousing.save()
                 outs = Out.objects.filter(department="SALE")
+                for out in outs:
+                    out.read = True
+                    out.save()
+            elif department == "QA":
+                matirials = Matirial.objects.filter(department="QA")
+                for matirial in matirials:
+                    matirial.read = True
+                    matirial.save()
+                warehousings = WareHousing.objects.filter(department="QA")
+                for warehousing in warehousings:
+                    warehousing.read = True
+                    warehousing.save()
+                outs = Out.objects.filter(department="QA")
                 for out in outs:
                     out.read = True
                     out.save()
