@@ -173,7 +173,7 @@ class EmployeeDelete(View):
         id = data.get("id")
         employee_id = data.get("employee_id")
         try:
-            employee = Employee.objects.get(employee_id=employee_id)
+            employee = Employee.objects.get(id=id)
             employee.delete()
             return JsonResponse({"message": "员工信息删除成功"})
         except Employee.DoesNotExist:
