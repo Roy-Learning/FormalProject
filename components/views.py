@@ -137,7 +137,6 @@ class EmployeeDelete(View):
 
 
 # 员工信息导入接口 (获取前端传来的json数据，遍历数据，添加员工信息；如果出现其他错误，返回错误信息)
-# TODO: 未完成
 class EmployeeImport(View):
     def post(self, request):
         excel_file = request.FILES["file"]
