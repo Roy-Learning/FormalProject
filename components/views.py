@@ -36,43 +36,90 @@ class UserLogin(View):
             return JsonResponse({"message": "error", "message": "用户不存在"})
 
 
+# 映射字段
+def map_fields(data):
+    gender_mapping = {
+        "M": "男",
+        "F": "女",
+    }
+    department_mapping = {
+        "SRC": "采购部门",
+        "PRD": "生产部门",
+        "MTD": "维护部门",
+        "SALE": "销售部门",
+        "QA": "质量保证部门",
+    }
+
+    position_mapping = {
+        "C": "总监",
+        "M": "经理",
+        "E": "工程师",
+        "S": "员工",
+    }
+    mapped_data = data.copy()  # 复制原始数据
+
+    mapped_data.update(
+        {
+            "gender": gender_mapping.get(data.get("gender"), data.get("gender")),
+            "department": department_mapping.get(
+                data.get("department"), data.get("department")
+            ),
+            "position": position_mapping.get(
+                data.get("position"), data.get("position")
+            ),
+        }
+    )
+
+    return mapped_data
+
+
+def reverse_map_fields(data):
+    gender_mapping = {
+        "男": "M",
+        "女": "F",
+    }
+    department_mapping = {
+        "采购部门": "SRC",
+        "生产部门": "PRD",
+        "维护部门": "MTD",
+        "销售部门": "SALE",
+        "质量保证部门": "QA",
+    }
+    position_mapping = {
+        "总监": "C",
+        "经理": "M",
+        "工程师": "E",
+        "员工": "S",
+    }
+
+    mapped_data = data.copy()  # 复制原始数据
+
+    mapped_data.update(
+        {
+            "gender": gender_mapping.get(data.get("gender"), data.get("gender")),
+            "department": department_mapping.get(
+                data.get("department"), data.get("department")
+            ),
+            "position": position_mapping.get(
+                data.get("position"), data.get("position")
+            ),
+        }
+    )
+
+    return mapped_data
+
+
 # 员工信息查询接口 (获取所有员工信息，转为字典，添加到employee_list中，返回employee_list)
 class EmployeeSearch(View):
     def get(self, request):
         employees = Employee.objects.all()
         employee_list = []
-
-        gender_mapping = {
-            "M": "男",
-            "F": "女",
-        }
-
-        department_mapping = {
-            "SRC": "采购部门",
-            "PRD": "生产部门",
-            "MTD": "维护部门",
-            "SALE": "销售部门",
-            "QA": "质量保证部门",
-        }
-
-        position_mapping = {
-            "C": "总监",
-            "M": "经理",
-            "E": "工程师",
-            "S": "员工",
-        }
-
         for employee in employees:
             employee_dict = model_to_dict(employee)
-            employee_dict["gender"] = gender_mapping.get(
-                employee_dict["gender"], employee_dict["gender"]
-            )
-            employee_dict["department"] = department_mapping.get(
-                employee_dict["department"], employee_dict["department"]
-            )
-            employee_dict["position"] = position_mapping.get(
-                employee_dict["position"], employee_dict["position"]
-            )
+            if employee_dict is None:
+                continue
+            mapped_fields = map_fields(employee_dict)
+            employee_dict.update(mapped_fields)
             employee_list.append(employee_dict)
         return JsonResponse(employee_list, safe=False)
 
@@ -85,33 +132,34 @@ class EmployeeUpdate(View):
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         # 获取员工信息
+        mapped_fields = reverse_map_fields(data)
+
         id = data.get("id")
-        employee_id = data.get("employee_id")
-        name = data.get("name")
-        age = data.get("age")
-        gender = data.get("gender")
-        department = data.get("department")
-        position = data.get("position")
+
         # 根据员工id更新员工信息，返回更新成功的信息
         # 如果员工不存在，则添加员工信息
         # 如果出现其他错误，返回错误信息
         try:
-            employee = Employee.objects.get(employee_id=employee_id)
-            employee.name = name
-            employee.age = age
-            employee.gender = gender
-            employee.department = department
-            employee.position = position
+            employee = Employee.objects.get(id=id)
+            print(mapped_fields.employee_id)
+            employee = Employee(
+                employee_id=mapped_fields.employee_id,
+                name=mapped_fields.name,
+                age=mapped_fields.age,
+                gender=mapped_fields.gender,
+                department=mapped_fields.department,
+                position=mapped_fields.position,
+            )
             employee.save()
             return JsonResponse({"message": "员工信息更新成功"})
         except Employee.DoesNotExist:
             employee = Employee(
-                employee_id=employee_id,
-                name=name,
-                age=age,
-                gender=gender,
-                department=department,
-                position=position,
+                employee_id=mapped_fields.employee_id,
+                name=mapped_fields.name,
+                age=mapped_fields.age,
+                gender=mapped_fields.gender,
+                department=mapped_fields.department,
+                position=mapped_fields.position,
             )
             employee.save()
             return JsonResponse({"message": "员工信息添加成功"})
