@@ -37,16 +37,31 @@ class UserLogin(View):
             if user.password == password:
                 # 返回一个 JsonResponse，包含 "message": "success" 和 "id": user.id
                 return JsonResponse(
-                    {"message": "success", "id": user.id, "avatar": user.avatar}
+                    {
+                        "message": "success",
+                        "success": True,
+                        "id": user.id,
+                        "avatar": user.avatar.url if user.avatar else None,
+                    }
                 )
             else:
                 # 如果 User 对象的密码与请求中的密码不同
                 # 返回一个 JsonResponse，包含 "message": "error" 和 "message": "密码错误"
-                return JsonResponse({"message": "error", "message": "密码错误"})
+                return JsonResponse(
+                    {
+                        "message": "密码错误",
+                        "success": False,
+                    }
+                )
         # 如果 User.DoesNotExist 异常被引发（即没有找到用户名为 username 的 User 对象）
         except User.DoesNotExist:
             # 返回一个 JsonResponse，包含 "message": "error" 和 "message": "用户不存在"
-            return JsonResponse({"message": "error", "message": "用户不存在"})
+            return JsonResponse(
+                {
+                    "message": "用户不存在",
+                    "success": False,
+                }
+            )
 
 
 # 映射字段
@@ -158,7 +173,7 @@ class EmployeeUpdate(View):
             data = json.loads(request.body)
         except json.JSONDecodeError:
             # 如果获取失败，返回 JsonResponse，包含错误信息
-            return JsonResponse({"message": "数据错误"}, status=200)
+            return JsonResponse({"message": "数据错误", "success": False}, status=200)
         # 如果 data 是一个列表，取第一个元素
         if isinstance(data, list):
             data = data[0]
@@ -179,7 +194,7 @@ class EmployeeUpdate(View):
             # 保存 Employee 对象
             employee.save()
             # 返回 JsonResponse，包含成功信息
-            return JsonResponse({"message": "员工信息更新成功"})
+            return JsonResponse({"message": "员工信息更新成功", "success": True})
         except Employee.DoesNotExist:
             # 如果 Employee.DoesNotExist 异常被引发（即没有找到 id 为 id 的 Employee 对象）
             # 创建一个新的 Employee 对象
@@ -194,10 +209,10 @@ class EmployeeUpdate(View):
             # 保存 Employee 对象
             employee.save()
             # 返回 JsonResponse，包含成功信息
-            return JsonResponse({"message": "员工信息添加成功"})
+            return JsonResponse({"message": "员工信息添加成功", "success": True})
         except Exception as e:
             # 如果发生其他异常，返回 JsonResponse，包含错误信息
-            return JsonResponse({"message": str(e)}, status=200)
+            return JsonResponse({"message": str(e), "success": False}, status=200)
 
 
 # 定义一个名为 EmployeeDelete 的视图类，继承自 View
@@ -209,7 +224,7 @@ class EmployeeDelete(View):
             data = json.loads(request.body)
         except json.JSONDecodeError:
             # 如果获取失败，返回 JsonResponse，包含错误信息
-            return JsonResponse({"message": "数据错误"}, status=200)
+            return JsonResponse({"message": "数据错误", "success": False}, status=200)
         # 如果 data 是一个列表，取第一个元素
         if isinstance(data, list):
             data = data[0]
@@ -221,14 +236,16 @@ class EmployeeDelete(View):
             # 删除 Employee 对象
             employee.delete()
             # 返回 JsonResponse，包含成功信息
-            return JsonResponse({"message": "员工信息删除成功"})
+            return JsonResponse({"message": "员工信息删除成功", "success": True})
         except Employee.DoesNotExist:
             # 如果 Employee.DoesNotExist 异常被引发（即没有找到 id 为 id 的 Employee 对象）
             # 返回 JsonResponse，包含错误信息
-            return JsonResponse({"message": "员工信息不存在"}, status=200)
+            return JsonResponse(
+                {"message": "员工信息不存在", "success": False}, status=200
+            )
         except Exception as e:
             # 如果发生其他异常，返回 JsonResponse，包含错误信息
-            return JsonResponse({"message": str(e)}, status=200)
+            return JsonResponse({"message": str(e), "success": False}, status=200)
 
 
 # 定义一个名为 EmployeeImport 的视图类，继承自 View
@@ -279,7 +296,7 @@ class EmployeeImport(View):
                 # 保存 Employee 对象
                 employee.save()
         # 返回 JsonResponse，包含成功信息
-        return JsonResponse({"message": "Excel file has been processed successfully."})
+        return JsonResponse({"message": "导入成功", "success": True})
 
 
 # 定义一个名为 MatirialAdd 的视图类，继承自 View
@@ -291,7 +308,7 @@ class MatirialAdd(View):
             data = json.loads(request.body)
         except json.JSONDecodeError:
             # 如果获取失败，返回 JsonResponse，包含错误信息
-            return JsonResponse({"message": "数据错误"}, status=200)
+            return JsonResponse({"message": "数据错误", "success": False}, status=200)
         # 如果 data 是一个列表，取第一个元素
         if isinstance(data, list):
             data = data[0]
@@ -325,7 +342,7 @@ class MatirialAdd(View):
             )
         except Exception as e:
             # 如果发生其他异常，返回 JsonResponse，包含错误信息
-            return JsonResponse({"message": str(e)}, status=200)
+            return JsonResponse({"message": str(e), "success": False}, status=200)
 
 
 # WareHousingAdd视图类用于处理成品入库的添加请求
@@ -337,7 +354,7 @@ class WareHousingAdd(View):
             data = json.loads(request.body)
         except json.JSONDecodeError:
             # 如果解析失败，返回错误信息
-            return JsonResponse({"message": "数据错误"}, status=200)
+            return JsonResponse({"message": "数据错误", "success": False}, status=200)
         # 如果data是一个列表，取第一个元素
         if isinstance(data, list):
             data = data[0]
@@ -368,7 +385,7 @@ class WareHousingAdd(View):
             )
         except Exception as e:
             # 如果出现其他错误，返回错误信息
-            return JsonResponse({"message": str(e)}, status=200)
+            return JsonResponse({"message": str(e), "success": False}, status=200)
 
 
 # OutAdd视图类用于处理成品出库的添加请求
@@ -410,7 +427,7 @@ class OutAdd(View):
             )
         except Exception as e:
             # 如果出现其他错误，返回错误信息
-            return JsonResponse({"message": str(e)}, status=200)
+            return JsonResponse({"message": str(e), "success": False}, status=200)
 
 
 # 定义一个名为TodoSearch的类，它继承自View类
@@ -497,7 +514,7 @@ class TodoUpdate(View):
             data = json.loads(request.body)
         # 如果解析失败，返回错误信息
         except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误"}, status=200)
+            return JsonResponse({"message": "数据错误", "success": False}, status=200)
         # 如果数据是列表，取第一个元素
         if isinstance(data, list):
             data = data[0]
@@ -576,10 +593,10 @@ class TodoUpdate(View):
                     out.read = True
                     out.save()
             # 所有操作成功后，返回成功信息
-            return JsonResponse({"message": "success"})
+            return JsonResponse({"message": "success", "success": True})
         # 如果执行过程中出现异常，返回异常信息
         except Exception as e:
-            return JsonResponse({"message": str(e)}, status=200)
+            return JsonResponse({"message": str(e), "success": False}, status=200)
 
 
 # 定义一个查询事务汇总的类，继承自View
@@ -606,7 +623,7 @@ class SummaryUpdate(View):
         try:
             data = json.loads(request.body)
         except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误"}, status=200)
+            return JsonResponse({"message": "数据错误", "success": False}, status=200)
 
         if isinstance(data, list):
             data = data[0]
@@ -621,18 +638,20 @@ class SummaryUpdate(View):
                 summary.date = date
                 summary.message = message
                 summary.save()
-                return JsonResponse({"message": "事务信息更新成功"})
+                return JsonResponse({"message": "事务信息更新成功", "success": True})
             except Summary.DoesNotExist:
-                return JsonResponse({"message": "没有找到对应的事务"}, status=400)
+                return JsonResponse(
+                    {"message": "没有找到对应的事务", "success": False}, status=200
+                )
             except Exception as e:
-                return JsonResponse({"message": str(e)}, status=400)
+                return JsonResponse({"message": str(e), "success": False}, status=200)
         else:
             try:
                 summary = Summary(date=date, message=message)
                 summary.save()
-                return JsonResponse({"message": "事务信息添加成功"})
+                return JsonResponse({"message": "事务信息添加成功", "success": True})
             except Exception as e:
-                return JsonResponse({"message": str(e)}, status=400)
+                return JsonResponse({"message": str(e), "success": False}, status=200)
 
 
 # 定义一个删除事务汇总的类，继承自View
@@ -644,7 +663,7 @@ class SummaryDelete(View):
             data = json.loads(request.body)
         # 如果解析失败，返回错误信息
         except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误"}, status=200)
+            return JsonResponse({"message": "数据错误", "success": False}, status=200)
         # 如果数据是列表，取第一个元素
         if isinstance(data, list):
             data = data[0]
@@ -657,15 +676,17 @@ class SummaryDelete(View):
             # 删除事务
             summary.delete()
             # 返回成功信息
-            return JsonResponse({"message": "事务信息删除成功"})
+            return JsonResponse({"message": "事务信息删除成功", "success": True})
         # 如果事务不存在
         except Summary.DoesNotExist:
             # 返回错误信息
-            return JsonResponse({"message": "事务信息不存在"}, status=200)
+            return JsonResponse(
+                {"message": "事务信息不存在", "success": False}, status=200
+            )
         # 如果出现其他错误
         except Exception as e:
             # 返回错误信息
-            return JsonResponse({"message": str(e)}, status=200)
+            return JsonResponse({"message": str(e), "success": False}, status=200)
 
 
 # 定义一个查询用户信息的类，继承自View
@@ -691,7 +712,7 @@ class UserSearch(View):
         # 如果用户不存在
         except User.DoesNotExist:
             # 返回错误信息
-            return JsonResponse({"error": "用户不存在"}, status=200)
+            return JsonResponse({"error": "用户不存在", "success": False}, status=200)
 
 
 class UserUpdate(View):
@@ -701,7 +722,7 @@ class UserUpdate(View):
             data = json.loads(request.body)
         # 如果解析失败，返回错误信息
         except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误"}, status=200)
+            return JsonResponse({"message": "数据错误", "success": False}, status=200)
         # 如果数据是列表，取第一个元素
         if isinstance(data, list):
             data = data[0]
@@ -735,12 +756,12 @@ class UserUpdate(View):
             # 保存用户
             user.save()
             # 返回成功信息
-            return JsonResponse({"message": "用户信息更新成功"})
+            return JsonResponse({"message": "用户信息更新成功", "success": True})
         # 如果用户不存在
         except User.DoesNotExist:
             # 可在此处添加新用户信息
-            return JsonResponse({"message": "用户不存在"}, status=200)
+            return JsonResponse({"message": "用户不存在", "success": False}, status=200)
         # 如果出现其他错误
         except Exception as e:
             # 返回错误信息
-            return JsonResponse({"message": str(e)}, status=200)
+            return JsonResponse({"message": str(e), "success": False}, status=200)
