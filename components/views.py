@@ -602,46 +602,37 @@ class SummarySearch(View):
 
 # 定义一个更新事务汇总的类，继承自View
 class SummaryUpdate(View):
-    # 定义post方法，接收前端传来的请求
     def post(self, request):
-        # 尝试从请求体中解析json数据
         try:
             data = json.loads(request.body)
-        # 如果解析失败，返回错误信息
         except json.JSONDecodeError:
             return JsonResponse({"message": "数据错误"}, status=200)
-        # 如果数据是列表，取第一个元素
+
         if isinstance(data, list):
             data = data[0]
-        # 从数据中获取事务id、日期和信息
+
         id = data.get("id")
         date = data.get("date")
         message = data.get("message")
-        # 尝试执行以下操作
-        try:
-            # 根据id获取事务
-            summary = Summary.objects.get(id=id)
-            # 更新事务的日期和信息
-            summary = Summary(
-                date=date,
-                message=message,
-            )
-            # 保存事务
-            summary.save()
-            # 返回成功信息
-            return JsonResponse({"message": "事务信息更新成功"})
-        # 如果事务不存在
-        except Summary.DoesNotExist:
-            # 创建新的事务
-            summary = Summary(id=id, date=date, message=message)
-            # 保存事务
-            summary.save()
-            # 返回成功信息
-            return JsonResponse({"message": "事务信息添加成功"})
-        # 如果出现其他错误
-        except Exception as e:
-            # 返回错误信息
-            return JsonResponse({"message": str(e)}, status=200)
+
+        if id:
+            try:
+                summary = Summary.objects.get(id=id)
+                summary.date = date
+                summary.message = message
+                summary.save()
+                return JsonResponse({"message": "事务信息更新成功"})
+            except Summary.DoesNotExist:
+                return JsonResponse({"message": "没有找到对应的事务"}, status=400)
+            except Exception as e:
+                return JsonResponse({"message": str(e)}, status=400)
+        else:
+            try:
+                summary = Summary(date=date, message=message)
+                summary.save()
+                return JsonResponse({"message": "事务信息添加成功"})
+            except Exception as e:
+                return JsonResponse({"message": str(e)}, status=400)
 
 
 # 定义一个删除事务汇总的类，继承自View
