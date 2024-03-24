@@ -60,7 +60,7 @@ def map_fields(data):
         "PRD": "生产部门",
         "MTD": "维护部门",
         "SALE": "销售部门",
-        "QA": "质量保证部门",
+        "QA": "质检部门",
     }
 
     position_mapping = {
@@ -97,7 +97,7 @@ def reverse_map_fields(data):
         "生产部门": "PRD",
         "维护部门": "MTD",
         "销售部门": "SALE",
-        "质量保证部门": "QA",
+        "质检部门": "QA",
     }
     position_mapping = {
         "总监": "C",

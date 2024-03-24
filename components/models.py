@@ -41,7 +41,7 @@ class Employee(models.Model):
             ("PRD", "生产部门"),
             ("MTD", "维修部门"),
             ("SALE", "销售部门"),
-            ("QA", "质量部门"),
+            ("QA", "质检部门"),
         ],
     )
     # position can only be one of the following: 'commissioner', 'manager', 'engineer', 'staff'
