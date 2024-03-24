@@ -325,7 +325,7 @@ class MatirialAdd(View):
                 matirial_id=mapped_fields["matirial_id"],
                 purchase_date=mapped_fields["purchase_date"],
                 matirail_Qualify=mapped_fields["matirail_Qualify"],
-                matriaial_QAid=mapped_fields["matriaial_QAid"],
+                matirail_QAid=mapped_fields["matirail_QAid"],
                 message=mapped_fields["message"],
                 department=mapped_fields["department"],
                 read=read,
