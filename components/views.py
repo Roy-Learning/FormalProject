@@ -122,21 +122,31 @@ def reverse_map_fields(data):
         "员工": "S",
     }
 
-    mapped_data = data.copy()  # 复制原始数据
-
-    mapped_data.update(
-        {
-            "gender": gender_mapping.get(data.get("gender"), data.get("gender")),
-            "department": department_mapping.get(
-                data.get("department"), data.get("department")
-            ),
-            "position": position_mapping.get(
-                data.get("position"), data.get("position")
-            ),
-        }
-    )
-
-    return mapped_data
+    # 如果输入是字典，进行字段映射
+    if isinstance(data, dict):
+        mapped_data = data.copy()  # 复制原始数据
+        mapped_data.update(
+            {
+                "gender": gender_mapping.get(data.get("gender"), data.get("gender")),
+                "department": department_mapping.get(
+                    data.get("department"), data.get("department")
+                ),
+                "position": position_mapping.get(
+                    data.get("position"), data.get("position")
+                ),
+            }
+        )
+        return mapped_data
+    # 如果输入是字符串，尝试在所有的映射中查找这个字符串
+    elif isinstance(data, str):
+        return (
+            gender_mapping.get(data)
+            or department_mapping.get(data)
+            or position_mapping.get(data)
+            or data
+        )
+    else:
+        raise ValueError("输入数据类型不正确，应为字典或字符串")
 
 
 # 定义一个名为 EmployeeSearch 的视图类，继承自 View
@@ -516,7 +526,8 @@ class TodoUpdate(View):
         if isinstance(data, list):
             data = data[0]
         # 从数据中获取部门信息
-        department = data.get("department")
+        department_temp = data.get("department")
+        department = reverse_map_fields(department_temp)
         # 尝试执行以下操作
         try:
             # 如果部门是"SRC"
