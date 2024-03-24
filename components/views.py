@@ -132,7 +132,7 @@ class EmployeeUpdate(View):
         try:
             data = json.loads(request.body)
         except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误"}, status=400)
+            return JsonResponse({"message": "数据错误"}, status=200)
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         # 获取员工信息
@@ -165,7 +165,7 @@ class EmployeeUpdate(View):
             employee.save()
             return JsonResponse({"message": "员工信息添加成功"})
         except Exception as e:
-            return JsonResponse({"message": str(e)}, status=500)
+            return JsonResponse({"message": str(e)}, status=200)
 
 
 # 员工信息删除接口 (获取前端传来的json数据，根据员工id删除员工信息，返回删除成功的信息；如果员工不存在，返回员工信息不存在；如果出现其他错误，返回错误信息)
@@ -174,7 +174,7 @@ class EmployeeDelete(View):
         try:
             data = json.loads(request.body)
         except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误"}, status=400)
+            return JsonResponse({"message": "数据错误"}, status=200)
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         id = data.get("id")
@@ -184,9 +184,9 @@ class EmployeeDelete(View):
             employee.delete()
             return JsonResponse({"message": "员工信息删除成功"})
         except Employee.DoesNotExist:
-            return JsonResponse({"message": "员工信息不存在"}, status=404)
+            return JsonResponse({"message": "员工信息不存在"}, status=200)
         except Exception as e:
-            return JsonResponse({"message": str(e)}, status=500)
+            return JsonResponse({"message": str(e)}, status=200)
 
 
 # 员工信息导入接口 (获取前端传来的json数据，遍历数据，添加员工信息；如果出现其他错误，返回错误信息)
@@ -239,7 +239,7 @@ class MatirialAdd(View):
         try:
             data = json.loads(request.body)
         except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误"}, status=400)
+            return JsonResponse({"message": "数据错误"}, status=200)
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         # 获取原料信息
@@ -262,10 +262,10 @@ class MatirialAdd(View):
             return JsonResponse({"message": "原料信息添加成功", "success": True})
         except IntegrityError as e:
             return JsonResponse(
-                {"message": "原料ID信息已存在", "success": False}, status=500
+                {"message": "原料ID信息已存在", "success": False}, status=200
             )
         except Exception as e:
-            return JsonResponse({"message": str(e)}, status=500)
+            return JsonResponse({"message": str(e)}, status=200)
 
 
 # 成品入库检测添加接口 (获取前端传来的json数据，添加成品入库信息；如果出现其他错误，返回错误信息)
@@ -274,7 +274,7 @@ class WareHousingAdd(View):
         try:
             data = json.loads(request.body)
         except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误"}, status=400)
+            return JsonResponse({"message": "数据错误"}, status=200)
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         # 获取成品入库信息
@@ -299,10 +299,10 @@ class WareHousingAdd(View):
             return JsonResponse({"message": "成品入库信息添加成功", "success": True})
         except IntegrityError as e:
             return JsonResponse(
-                {"message": "成品入库ID信息已存在", "success": False}, status=500
+                {"message": "成品入库ID信息已存在", "success": False}, status=200
             )
         except Exception as e:
-            return JsonResponse({"message": str(e)}, status=500)
+            return JsonResponse({"message": str(e)}, status=200)
 
 
 # 成品出库检测添加接口 (获取前端传来的json数据，添加成品出库信息；如果出现其他错误，返回错误信息)
@@ -311,7 +311,7 @@ class OutAdd(View):
         try:
             data = json.loads(request.body)
         except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误"}, status=400)
+            return JsonResponse({"message": "数据错误"}, status=200)
         if isinstance(data, list):
             data = data[0]  # 如果data是一个列表，取第一个元素
         # 获取成品出库信息
@@ -335,10 +335,10 @@ class OutAdd(View):
             return JsonResponse({"message": "成品出库信息添加成功", "success": True})
         except IntegrityError as e:
             return JsonResponse(
-                {"message": "成品出库ID信息已存在", "success": False}, status=500
+                {"message": "成品出库ID信息已存在", "success": False}, status=200
             )
         except Exception as e:
-            return JsonResponse({"message": str(e)}, status=500)
+            return JsonResponse({"message": str(e)}, status=200)
 
 
 # 待办事项查询接口 (获取所有待办事项信息，转为字典，添加到todo_list中，返回todo_list)
@@ -440,7 +440,7 @@ class TodoUpdate(View):
         try:
             data = json.loads(request.body)
         except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误"}, status=400)
+            return JsonResponse({"message": "数据错误"}, status=200)
         if isinstance(data, list):
             data = data[0]
         department = data.get("department")
@@ -494,7 +494,7 @@ class TodoUpdate(View):
                     out.save()
             return JsonResponse({"message": "success"})
         except Exception as e:
-            return JsonResponse({"message": str(e)}, status=500)
+            return JsonResponse({"message": str(e)}, status=200)
 
 
 # 事务汇总查询接口（获取所有事务汇总信息，转为字典，添加到summary_list中，返回summary_list）
@@ -514,7 +514,7 @@ class SummaryUpdate(View):
         try:
             data = json.loads(request.body)
         except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误"}, status=400)
+            return JsonResponse({"message": "数据错误"}, status=200)
         if isinstance(data, list):
             data = data[0]
         id = data.get("id")
@@ -533,7 +533,7 @@ class SummaryUpdate(View):
             summary.save()
             return JsonResponse({"message": "事务信息添加成功"})
         except Exception as e:
-            return JsonResponse({"message": str(e)}, status=500)
+            return JsonResponse({"message": str(e)}, status=200)
 
 
 # 事务汇总删除接口（获取前端传来的json数据，根据事务id删除事务信息，返回删除成功的信息；如果事务不存在，返回事务信息不存在；如果出现其他错误，返回错误信息）
@@ -542,7 +542,7 @@ class SummaryDelete(View):
         try:
             data = json.loads(request.body)
         except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误"}, status=400)
+            return JsonResponse({"message": "数据错误"}, status=200)
         if isinstance(data, list):
             data = data[0]
         id = data.get("id")
@@ -551,9 +551,9 @@ class SummaryDelete(View):
             summary.delete()
             return JsonResponse({"message": "事务信息删除成功"})
         except Summary.DoesNotExist:
-            return JsonResponse({"message": "事务信息不存在"}, status=404)
+            return JsonResponse({"message": "事务信息不存在"}, status=200)
         except Exception as e:
-            return JsonResponse({"message": str(e)}, status=500)
+            return JsonResponse({"message": str(e)}, status=200)
 
 
 # 用户信息查询接口（根据id获取用户信息，转为字典，添加到user_list中，返回user_list）
@@ -569,7 +569,7 @@ class UserSearch(View):
                 user_dict["avatar"] = ""
             return JsonResponse(user_dict, safe=False)
         except User.DoesNotExist:
-            return JsonResponse({"error": "用户不存在"}, status=404)
+            return JsonResponse({"error": "用户不存在"}, status=200)
 
 
 # 用户信息更新接口（获取前端传来的json数据，根据用户id更新用户信息，返回更新成功的信息；如果用户不存在，则提醒；如果出现其他错误，返回错误信息）
@@ -578,7 +578,7 @@ class UserUpdate(View):
         try:
             data = json.loads(request.body)
         except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误"}, status=400)
+            return JsonResponse({"message": "数据错误"}, status=200)
         if isinstance(data, list):
             data = data[0]
         id = data.get("id")
@@ -595,6 +595,8 @@ class UserUpdate(View):
             avatar_URL = ContentFile(
                 base64.b64decode(imgstr), name=str(uuid.uuid4())[:12] + "." + ext
             )
+        else:
+            avatar_URL = None
         try:
             user = User.objects.get(id=id)
             user.username = username
@@ -604,6 +606,6 @@ class UserUpdate(View):
             return JsonResponse({"message": "用户信息更新成功"})
         except User.DoesNotExist:
             # 可在此处添加新用户信息
-            return JsonResponse({"message": "用户不存在"}, status=404)
+            return JsonResponse({"message": "用户不存在"}, status=200)
         except Exception as e:
-            return JsonResponse({"message": str(e)}, status=500)
+            return JsonResponse({"message": str(e)}, status=200)
