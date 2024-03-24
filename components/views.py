@@ -764,7 +764,13 @@ class UserUpdate(View):
             # 保存用户
             user.save()
             # 返回成功信息
-            return JsonResponse({"message": "用户信息更新成功", "success": True})
+            return JsonResponse(
+                {
+                    "message": "用户信息更新成功",
+                    "success": True,
+                    "avatar": user.avatar.url if user.avatar else None,
+                }
+            )
         # 如果用户不存在
         except User.DoesNotExist:
             # 可在此处添加新用户信息
