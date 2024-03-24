@@ -314,14 +314,11 @@ class MatirialAdd(View):
             data = data[0]
         # 反向映射字段
         mapped_fields = reverse_map_fields(data)
-        # 从 data 中获取 "id" 字段
-        id = data.get("id")
         # 初始化 read 为 "False"
         read = "False"
         try:
             # 创建一个新的 Matirial 对象
             matirial = Matirial(
-                id=id,
                 matirial_id=mapped_fields["matirial_id"],
                 purchase_date=mapped_fields["purchase_date"],
                 matirail_Qualify=mapped_fields["matirail_Qualify"],
