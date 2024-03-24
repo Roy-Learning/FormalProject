@@ -35,6 +35,7 @@ from components.views import (
     SummaryDelete,
     UserSearch,
     UserUpdate,
+    avatarUpdate,
 )
 
 urlpatterns = [
@@ -62,6 +63,7 @@ urlpatterns = [
     # 个人信息接口
     path("api/userinfo_search/", UserSearch.as_view()),  # 用户信息查询,GET
     path("api/userinfo_update/", UserUpdate.as_view()),  # 用户信息更新,POST
+    path("api/userinfo_avatar/", avatarUpdate.as_view()),  # 用户信息删除,POST
 ]
 
 if settings.DEBUG:
