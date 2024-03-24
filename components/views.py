@@ -785,36 +785,15 @@ class UserUpdate(View):
 # 头像上传
 class avatarUpdate(View):
     def post(self, request):
-        # 尝试从请求体中解析json数据
-        try:
-            data = json.loads(request.body)
-        # 如果解析失败，返回错误信息
-        except json.JSONDecodeError:
-            return JsonResponse({"message": "数据错误", "success": False}, status=200)
-        # 如果数据是列表，取第一个元素
-        if isinstance(data, list):
-            data = data[0]
-        # 从数据中获取用户id、用户名、密码和头像
-        id = data.get("id")
-        avatar = data.get("avatar")
-        # 如果avatar是一个列表，取第一个元素
-        if isinstance(avatar, list) and avatar:
-            avatar = avatar[0]
-        # 如果avatar是一个字符串，转为图片文件
-        if avatar:
-            format, imgstr = avatar.split(";base64,")
-            ext = format.split("/")[-1]
-            avatar_URL = ContentFile(
-                base64.b64decode(imgstr), name=str(uuid.uuid4())[:12] + "." + ext
-            )
-        else:
-            avatar_URL = None
+        # 从请求中获取用户id和头像文件
+        id = request.POST.get("id")
+        avatar = request.FILES.get("avatar")
         try:
             # 根据id获取用户
             user = User.objects.get(id=id)
             # 如果avatar存在，更新用户的头像
-            if avatar_URL:
-                user.avatar = avatar_URL
+            if avatar:
+                user.avatar = avatar
             # 保存用户
             user.save()
             # 返回成功信息
