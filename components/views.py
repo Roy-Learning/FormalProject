@@ -36,7 +36,9 @@ class UserLogin(View):
             # 如果 User 对象的密码与请求中的密码相同
             if user.password == password:
                 # 返回一个 JsonResponse，包含 "message": "success" 和 "id": user.id
-                return JsonResponse({"message": "success", "id": user.id})
+                return JsonResponse(
+                    {"message": "success", "id": user.id, "avatar": user.avatar}
+                )
             else:
                 # 如果 User 对象的密码与请求中的密码不同
                 # 返回一个 JsonResponse，包含 "message": "error" 和 "message": "密码错误"
