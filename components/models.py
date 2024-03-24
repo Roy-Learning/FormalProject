@@ -61,7 +61,7 @@ class Matirial(models.Model):
     id = models.AutoField(primary_key=True)
     matirial_id = models.CharField(max_length=20, unique=True)
     purchase_date = models.DateField()
-    matirail_Qualify = models.BooleanField(default=False)
+    matirail_Qualify = models.CharField(max_length=50)
     matriaial_QAid = models.CharField(max_length=20)
     message = models.CharField(max_length=100)
     department = models.CharField(max_length=20)

@@ -415,148 +415,76 @@ class OutAdd(View):
 
 # 定义一个名为TodoSearch的类，它继承自View类
 class TodoSearch(View):
-    # 定义一个名为get的方法，它接受两个参数：self和request
     def get(self, request):
-        # 创建一个空列表SRC_todo，用于存储部门为SRC的待办事项
-        SRC_todo = []
-        # 从Matirial模型中筛选出部门为SRC的待办事项，并将结果赋值给SRC_todo_matirial
+        # 获取所有的待办事项
         SRC_todo_matirial = Matirial.objects.filter(department="SRC")
-        # 遍历SRC_todo_matirial中的每一个待办事项
-        for matirial in SRC_todo_matirial:
-            # 使用model_to_dict函数将待办事项转换为字典，并将结果赋值给matirial_dict
-            matirial_dict = model_to_dict(matirial)
-            # 将matirial_dict添加到SRC_todo列表中
-
-        # 创建一个空列表PRD_todo，用于存储部门为PRD的待办事项
-        PRD_todo = []
-        # 创建一个空列表PRD_todo_temp，用于临时存储待办事项
-        PRD_todo_temp = []
-        # 从Matirial模型中筛选出部门为PRD的待办事项，并将结果赋值给PRD_todo_matirial
         PRD_todo_matirial = Matirial.objects.filter(department="PRD")
-        # 从WareHousing模型中筛选出部门为PRD的待办事项，并将结果赋值给PRD_todo_warehousing
         PRD_todo_warehousing = WareHousing.objects.filter(department="PRD")
-        # 遍历PRD_todo_matirial中的每一个待办事项
-        for matirial in PRD_todo_matirial:
-            # 使用model_to_dict函数将待办事项转换为字典，并将结果赋值给matirial_dict
-            matirial_dict = model_to_dict(matirial)
-            # 将matirial_dict添加到PRD_todo_temp列表中
-            PRD_todo_temp.append(matirial_dict)
-        # 将PRD_todo_temp列表添加到PRD_todo列表中
-        PRD_todo.append(PRD_todo_temp)
-        # 清空PRD_todo_temp列表
-        PRD_todo_temp = []
-        # 遍历PRD_todo_warehousing中的每一个待办事项
-        for matirial in PRD_todo_warehousing:
-            # 使用model_to_dict函数将待办事项转换为字典，并将结果赋值给matirial_dict
-            matirial_dict = model_to_dict(matirial)
-            # 将matirial_dict添加到PRD_todo_temp列表中
-            PRD_todo_temp.append(matirial_dict)
-        # 将PRD_todo_temp列表添加到PRD_todo列表中
-        PRD_todo.append(PRD_todo_temp)
-
-        # 创建一个空列表MTD_todo，用于存储部门为MTD的待办事项
-        MTD_todo = []
-        # 创建一个空列表MTD_todo_temp，用于临时存储待办事项
-        MTD_todo_temp = []
-        # 从WareHousing模型中筛选出部门为MTD的待办事项，并将结果赋值给MTD_todo_warehousing
         MTD_todo_warehousing = WareHousing.objects.filter(department="MTD")
-        # 从Out模型中筛选出部门为MTD的待办事项，并将结果赋值给MTD_todo_out
         MTD_todo_out = Out.objects.filter(department="MTD")
-        # 遍历MTD_todo_warehousing中的每一个待办事项
-        for matirial in MTD_todo_warehousing:
-            # 使用model_to_dict函数将待办事项转换为字典，并将结果赋值给matirial_dict
-            matirial_dict = model_to_dict(matirial)
-            # 将matirial_dict添加到MTD_todo_temp列表中
-            MTD_todo_temp.append(matirial_dict)
-        # 将MTD_todo_temp列表添加到MTD_todo列表中
-        MTD_todo.append(MTD_todo_temp)
-        # 清空MTD_todo_temp列表
-        MTD_todo_temp = []
-        # 遍历MTD_todo_out中的每一个待办事项
-        for matirial in MTD_todo_out:
-            # 使用model_to_dict函数将待办事项转换为字典，并将结果赋值给matirial_dict
-            matirial_dict = model_to_dict(matirial)
-            # 将matirial_dict添加到MTD_todo_temp列表中
-            MTD_todo_temp.append(matirial_dict)
-        # 将MTD_todo_temp列表添加到MTD_todo列表中
-        MTD_todo.append(MTD_todo_temp)
-
-        # 创建一个空列表SALE_todo，用于存储部门为SALE的待办事项
-        SALE_todo = []
-        # 创建一个空列表SALE_todo_temp，用于临时存储待办事项
-        SALE_todo_temp = []
-        # 从WareHousing模型中筛选出部门为SALE的待办事项，并将结果赋值给SALE_todo_warehousing
         SALE_todo_warehousing = WareHousing.objects.filter(department="SALE")
-        # 从Out模型中筛选出部门为SALE的待办事项，并将结果赋值给SALE_todo_out
         SALE_todo_out = Out.objects.filter(department="SALE")
-        # 遍历SALE_todo_warehousing中的每一个待办事项
-        for matirial in SALE_todo_warehousing:
-            # 使用model_to_dict函数将待办事项转换为字典，并将结果赋值给matirial_dict
-            matirial_dict = model_to_dict(matirial)
-            # 将matirial_dict添加到SALE_todo_temp列表中
-            SALE_todo_temp.append(matirial_dict)
-        # 将SALE_todo_temp列表添加到SALE_todo列表中
-        SALE_todo.append(SALE_todo_temp)
-        # 清空SALE_todo_temp列表
-        SALE_todo_temp = []
-        # 遍历SALE_todo_out中的每一个待办事项
-        for matirial in SALE_todo_out:
-            # 使用model_to_dict函数将待办事项转换为字典，并将结果赋值给matirial_dict
-            matirial_dict = model_to_dict(matirial)
-            # 将matirial_dict添加到SALE_todo_temp列表中
-            SALE_todo_temp.append(matirial_dict)
-        # 将SALE_todo_temp列表添加到SALE_todo列表中
-        SALE_todo.append(SALE_todo_temp)
-
-        # 创建一个空列表QA_todo，用于存储部门为QA的待办事项
-        QA_todo = []
-        # 创建一个空列表QA_todo_temp，用于临时存储待办事项
-        QA_todo_temp = []
-        # 从Matirial模型中筛选出部门为QA的待办事项，并将结果赋值给QA_todo_matirial
         QA_todo_matirial = Matirial.objects.filter(department="QA")
-        # 从WareHousing模型中筛选出部门为QA的待办事项，并将结果赋值给QA_todo_warehousing
         QA_todo_warehousing = WareHousing.objects.filter(department="QA")
-        # 从Out模型中筛选出部门为QA的待办事项，并将结果赋值给QA_todo_out
         QA_todo_out = Out.objects.filter(department="QA")
-        # 遍历QA_todo_matirial中的每一个待办事项
-        for matirial in QA_todo_matirial:
-            # 使用model_to_dict函数将待办事项转换为字典，并将结果赋值给matirial_dict
-            matirial_dict = model_to_dict(matirial)
-            # 将matirial_dict添加到QA_todo_temp列表中
-            QA_todo_temp.append(matirial_dict)
-        # 将QA_todo_temp列表添加到QA_todo列表中
-        QA_todo.append(QA_todo_temp)
-        # 清空QA_todo_temp列表
-        QA_todo_temp = []
-        # 遍历QA_todo_warehousing中的每一个待办事项
-        for matirial in QA_todo_warehousing:
-            # 使用model_to_dict函数将待办事项转换为字典，并将结果赋值给matirial_dict
-            matirial_dict = model_to_dict(matirial)
-            # 将matirial_dict添加到QA_todo_temp列表中
-            QA_todo_temp.append(matirial_dict)
-        # 将QA_todo_temp列表添加到QA_todo列表中
-        QA_todo.append(QA_todo_temp)
-        # 清空QA_todo_temp列表
-        QA_todo_temp = []
-        # 遍历QA_todo_out中的每一个待办事项
-        for matirial in QA_todo_out:
-            # 使用model_to_dict函数将待办事项转换为字典，并将结果赋值给matirial_dict
-            matirial_dict = model_to_dict(matirial)
-            # 将matirial_dict添加到QA_todo_temp列表中
-            QA_todo_temp.append(matirial_dict)
-        # 将QA_todo_temp列表添加到QA_todo列表中
-        QA_todo.append(QA_todo_temp)
 
-        # 使用JsonResponse函数返回一个JSON响应，其中包含了各个部门的待办事项列表
+        # 初始化待办事项列表
+        SRC_todo = []
+        PRD_todo = []
+        MTD_todo = []
+        SALE_todo = []
+        QA_todo = []
+
+        # 将待办事项添加到相应的列表中
+        for matirial in SRC_todo_matirial:
+            matirial_dict = model_to_dict(matirial)
+            SRC_todo.append(matirial_dict)
+
+        for matirial in PRD_todo_matirial:
+            matirial_dict = model_to_dict(matirial)
+            PRD_todo.append(matirial_dict)
+
+        for warehousing in PRD_todo_warehousing:
+            warehousing_dict = model_to_dict(warehousing)
+            PRD_todo.append(warehousing_dict)
+
+        for warehousing in MTD_todo_warehousing:
+            warehousing_dict = model_to_dict(warehousing)
+            MTD_todo.append(warehousing_dict)
+
+        for out in MTD_todo_out:
+            out_dict = model_to_dict(out)
+            MTD_todo.append(out_dict)
+
+        for warehousing in SALE_todo_warehousing:
+            warehousing_dict = model_to_dict(warehousing)
+            SALE_todo.append(warehousing_dict)
+
+        for out in SALE_todo_out:
+            out_dict = model_to_dict(out)
+            SALE_todo.append(out_dict)
+
+        for matirial in QA_todo_matirial:
+            matirial_dict = model_to_dict(matirial)
+            QA_todo.append(matirial_dict)
+
+        for warehousing in QA_todo_warehousing:
+            warehousing_dict = model_to_dict(warehousing)
+            QA_todo.append(warehousing_dict)
+
+        for out in QA_todo_out:
+            out_dict = model_to_dict(out)
+            QA_todo.append(out_dict)
+
+        # 返回待办事项列表
         return JsonResponse(
             {
-                "SRC": SRC_todo,
-                "PRD": PRD_todo,
-                "MTD": MTD_todo,
-                "SALE": SALE_todo,
-                "QA": QA_todo,
-            },
-            safe=False,
+                "SRC_todo": SRC_todo,
+                "PRD_todo": PRD_todo,
+                "MTD_todo": MTD_todo,
+                "SALE_todo": SALE_todo,
+                "QA_todo": QA_todo,
+            }
         )
 
 
